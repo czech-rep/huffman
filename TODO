@@ -1,0 +1,17 @@
+here i will implement Huffman coding in go
+
+        O
+    O       O
+ a    b  c     d
+
+11   10  01    00
+
+encoding: abac -> 11101101
+will use a mapping: {a: 11, ...}
+
+decoding 000111 -> dca
+done by recursiwely traversing graph
+
+desired workflow - encoding a file
+provided file path, you parse by words, interpuncuation and spaces
+-> map[string]int32 - words with weights

@@ -1,5 +1,10 @@
 Huffman coding in go. usage:
 
+## install dependencies
+```
+go mod download
+```
+
 ## encode a file
 ```
 go run . encode <file>
@@ -9,6 +14,11 @@ will produce binary file `<file>.huffman` and json representation of tree `<file
 ## decode
 ```
 go run . --tree <file>.tree.huffman decode <file>.huffman
+```
+
+## run tests
+```
+go test
 ```
 
 huffman tree example:

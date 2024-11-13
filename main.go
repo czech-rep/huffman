@@ -54,8 +54,8 @@ func main() {
 	var mode, inputFile, treeFile string
 
 	app := &cli.App{
-		Name:  "boom",
-		Usage: "make an explosive entrance",
+		Name:  "Huffman coding",
+		Usage: "",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "tree",

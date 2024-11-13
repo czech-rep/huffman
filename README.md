@@ -11,18 +11,19 @@ will produce binary file `<file>.huffman` and json representation of tree `<file
 go run . --tree <file>.tree.huffman decode <file>.huffman
 ```
 
-how works:
-
+huffman tree example:
+<pre>
         x
     x       x
  a    b  c     d
 
 11   10  01    00
+</pre>
 
 encoding: abac -> 11101101
-will use a mapping: {a: 11, ...}
+done with a map: {a: 11, b:10, ...}
 
-decoding 000111 -> dca
+decoding 000111 -> 00 01 11 -> d c a
 done by recursiwely traversing graph
 
 desired workflow - encoding a file

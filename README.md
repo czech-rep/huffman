@@ -5,6 +5,12 @@ Huffman coding in go. usage:
 go mod download
 ```
 
+## create executable
+```
+go build -o huffman
+```
+(to use instead of `go run .` or install in PATH)
+
 ## encode a file
 ```
 go run . encode <file>

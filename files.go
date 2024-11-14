@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 )
 
@@ -21,9 +20,6 @@ func WriteToFile(path string, content string) error {
 	}
 	return os.WriteFile(path, data, 0644)
 }
-func WriteBytesToFile(path string, content []byte) error {
-	return os.WriteFile(path, content, 0644)
-}
 
 func WriteTreeToFile(path string, root *Node) error {
 	content, err := root.Json()
@@ -34,13 +30,12 @@ func WriteTreeToFile(path string, root *Node) error {
 }
 
 func ReadTreeFromFile(path string) (*Node, error) {
-	content, _ := ReadTextFile(path)
+	content, _ := os.ReadFile(path)
 
 	var result Node
 
-	err := json.Unmarshal([]byte(content), &result)
+	err := json.Unmarshal(content, &result)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 

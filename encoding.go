@@ -10,7 +10,7 @@ import (
 // but the last byte is problematic, because we don't know the length of endocing
 // encoder might have returned "11" as last byte, but "11" -> 3 -> "00000011" we would get wrong code
 // 3 -> "11000000" is also wrong. So we have to save lenght of our code
-// Solution append last byte with length of significant bits in the previous byte
+// Solution append: last byte with length of significant bits in the previous byte
 
 type InvalidCode string
 
@@ -43,6 +43,7 @@ func BinaryToBytes(binaryStr string) []byte {
 	return append(result, byte(len(currentBits)))
 }
 func BytesToBits(input []byte) (string, error) {
+	// from a slice of bytes, returns "001101101011101110"
 	result := ""
 	if len(input) == 0 {
 		return result, nil
@@ -52,8 +53,7 @@ func BytesToBits(input []byte) (string, error) {
 	}
 	length := len(input)
 	for i := 0; i < length-2; i++ {
-		currentByte := input[i]
-		result += fmt.Sprintf("%08b", currentByte)
+		result += fmt.Sprintf("%08b", input[i])
 	}
 	lastByte := input[length-2]
 	lastBitsLength := int(input[length-1])

@@ -25,12 +25,12 @@ func TestHeap(t *testing.T) {
 		t.Errorf("Invalid length of heap")
 	}
 
-	minimum := -999 // test that it's a minimum heap
+	previous := -999 // test that it's a minimum heap - every poped element if larger
 	for len(*myheap) > 0 {
 		item := heap.Pop(myheap).(Node)
-		if item.Weight < minimum {
-			t.Errorf("Heap pop gave %v which is greater than previous %v", item.Weight, minimum)
+		if item.Weight < previous {
+			t.Errorf("Heap pop gave %v which is greater than previous %v", item.Weight, previous)
 		}
-		minimum = item.Weight
+		previous = item.Weight
 	}
 }

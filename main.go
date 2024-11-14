@@ -27,27 +27,41 @@ func DecodeCmd(inputFile, treeFile string) (string, error) {
 	}
 	return result, nil
 }
-func EncodeCmd(inputFile, treeFile string) (string, error) {
+func EncodeCmd(inputFile, outFile, outTreeFile string) error {
 	content, err := ReadTextFile(inputFile)
 	if err != nil {
-		return "", err
+		return err
 	}
 	var root *Node
-	if treeFile != "" {
-		root, err = ReadTreeFromFile(treeFile)
-		if err != nil {
-			return "", err
-		}
-	} else {
-		contedStrings := Counted(stringToSlice(content))
-		root = BuildTree(contedStrings)
-		WriteTreeToFile(inputFile+".tree.huffmann", root) // somewhere else
+	contedStrings := Counted(stringToSlice(content))
+	root = BuildTree(contedStrings)
+
+	result, err := Encode(root, content)
+	if err != nil {
+		return err
+	}
+	resultBytes := BinaryToBytes(result)
+	WriteTreeToFile(outTreeFile, root)
+	os.WriteFile(outFile, resultBytes, 0644)
+	return nil
+}
+
+func EncodeWithTree(inputFile, treeFile, outFile string) error {
+	content, err := ReadTextFile(inputFile)
+	if err != nil {
+		return err
+	}
+	var root *Node
+	root, err = ReadTreeFromFile(treeFile)
+	if err != nil {
+		return err
 	}
 	result, err := Encode(root, content)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return result, nil
+	WriteToFile(outFile, result)
+	return nil
 }
 
 func main() {
@@ -55,7 +69,7 @@ func main() {
 
 	app := &cli.App{
 		Name:  "Huffman coding",
-		Usage: "",
+		Usage: "[-tree <tree_path>] encode <path>\n-tree <tree_path> decode <path>",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "tree",
@@ -66,14 +80,14 @@ func main() {
 		},
 		Action: func(ctx *cli.Context) error {
 			if ctx.Args().Len() < 2 {
-				fmt.Println("invalid args")
+				return cli.Exit("Too few arguments", 1)
 			}
 			mode = ctx.Args().Get(0)
 			inputFile = ctx.Args().Get(1)
 
 			if mode == "decode" {
 				if treeFile == "" {
-					log.Fatalf("Error: --tree is required for recoding")
+					return cli.Exit("Error: --tree is required for decoding", 1)
 				}
 				result, err := DecodeCmd(inputFile, treeFile)
 				if err != nil {
@@ -81,15 +95,22 @@ func main() {
 				}
 				fmt.Println(result)
 			} else if mode == "encode" {
-				result, err := EncodeCmd(inputFile, treeFile)
-				if err != nil {
-					return err
+				outFile := inputFile + ".huffman"
+				outTreeFile := inputFile + ".tree.huffman"
+				if treeFile == "" {
+					err := EncodeCmd(inputFile, outFile, outTreeFile)
+					if err != nil {
+						return err
+					}
+				} else {
+					err := EncodeWithTree(inputFile, treeFile, outFile)
+					if err != nil {
+						return err
+					}
 				}
-				outPath := inputFile + ".huffman"
-				os.WriteFile(outPath, BinaryToBytes(result), 0644)
-				fmt.Printf("Encoded to %v\n", outPath)
+				fmt.Printf("Encoded to %v\n", outFile)
 			} else {
-				return cli.Exit("invalid mode", 1)
+				return cli.Exit("mode may be encode / decode", 1)
 			}
 			return nil
 		},

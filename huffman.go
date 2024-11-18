@@ -69,7 +69,7 @@ func decode(message []string, root *Node, node *Node, result []string) ([]string
 	}
 }
 func BuildTree(weightedStrings map[string]int) *Node { // TODO func to update tree
-	nodeHeap := &NodeHeap{}
+	nodeHeap := new(NodeHeap)
 	heap.Init(nodeHeap)
 
 	for word, weight := range weightedStrings {

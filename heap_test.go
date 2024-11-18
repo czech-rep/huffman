@@ -15,13 +15,14 @@ func TestHeap(t *testing.T) {
 		Node{"a", 110, nil, nil},
 		Node{"a", 1, nil, nil},
 		Node{"a", 4, nil, nil},
+		*new(Node),
 	}
 	heap.Init(myheap)
 	heap.Push(myheap, Node{"a", 10, nil, nil})
 	heap.Push(myheap, Node{"a", 3, nil, nil})
 	heap.Push(myheap, Node{"a", -100, nil, nil})
 
-	if len(*myheap) != 10 {
+	if len(*myheap) != 11 {
 		t.Errorf("Invalid length of heap")
 	}
 
